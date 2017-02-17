@@ -1,0 +1,6 @@
+X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\location\location\bin\Debug\location.exe.config
+X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\location\location\bin\Debug\location.exe
+X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\location\location\bin\Debug\location.pdb
+X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\location\location\obj\Debug\location.exe
+X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\location\location\obj\Debug\location.pdb
+X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\location\location\obj\Debug\location.csprojResolveAssemblyReference.cache

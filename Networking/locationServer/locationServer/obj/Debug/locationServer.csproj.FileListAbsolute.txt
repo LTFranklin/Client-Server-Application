@@ -1,0 +1,6 @@
+X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\locationServer\locationServer\bin\Debug\locationServer.exe.config
+X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\locationServer\locationServer\bin\Debug\locationServer.exe
+X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\locationServer\locationServer\bin\Debug\locationServer.pdb
+X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\locationServer\locationServer\obj\Debug\locationServer.csprojResolveAssemblyReference.cache
+X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\locationServer\locationServer\obj\Debug\locationServer.exe
+X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\locationServer\locationServer\obj\Debug\locationServer.pdb
