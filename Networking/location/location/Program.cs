@@ -122,18 +122,18 @@ namespace location
         static  public void match(string rawInput, string [] args)
         {
             //string whoisFind;
-            string whoisFindPass = @"^([ -~]*)\r\n";
-            string whoisFindFail = @"^ERROR: no entries found\r\n";
-            string whoisEdit = @"^\bOK\r\n";
-            string http09FindPass = @"^\bHTTP/0.9 200 OK\r\nContent-Type: text/plain\r\n\r\n([ -~]*)\r\n";
-            string http09FindFail = @"^\bHTTP/0.9 404 Not Found\r\nContent-Type: text/plain\r\n\r\n";
+            string whoisFindPass = @"^([ -~]*)\r\n$";
+            string whoisFindFail = @"^ERROR: no entries found\r\n$";
+            string whoisEdit = @"^\bOK\r\n$";
+            string http09FindPass = @"^\bHTTP/0.9 200 OK\r\nContent-Type: text/plain\r\n\r\n([ -~]*)\r\n$";
+            string http09FindFail = @"^\bHTTP/0.9 404 Not Found\r\nContent-Type: text/plain\r\n\r\n$";
             string http09Edit = @"^\bHTTP/0.9 200 OK\r\nContent-Type: text/plain\r\n\r\n$";
-            string http10FindPass = @"^\bHTTP/1.0 200 OK\r\nContent-Type: text/plain\r\n\r\n([ -~]*)\r\n";
-            string http10FindFail = @"^\bHTTP/1.0 404 Not Found\r\nContent-Type: text/plain\r\n\r\n";
-            string http10Edit = @"^\bHTTP/1.0 200 OK\r\nContent-Type: text/plain\r\n\r\n";
-            string http11FindPass = @"^\bHTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n([ -~]*)\r\n";
-            string http11FindFail = @"^\bHTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\n\r\n";
-            string http11Edit = @"^\bHTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n";
+            string http10FindPass = @"^\bHTTP/1.0 200 OK\r\nContent-Type: text/plain\r\n\r\n([ -~]*)\r\n$";
+            string http10FindFail = @"^\bHTTP/1.0 404 Not Found\r\nContent-Type: text/plain\r\n\r\n$";
+            string http10Edit = @"^\bHTTP/1.0 200 OK\r\nContent-Type: text/plain\r\n\r\n$";
+            string http11FindPass = @"^\bHTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n([ -~]*)\r\n$";
+            string http11FindFail = @"^\bHTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\n\r\n$";
+            string http11Edit = @"^\bHTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n$";
 
 
             if (Regex.IsMatch(rawInput, whoisFindFail) || Regex.IsMatch(rawInput, http09FindFail) || Regex.IsMatch(rawInput, http10FindFail) || Regex.IsMatch(rawInput, http11FindFail))
