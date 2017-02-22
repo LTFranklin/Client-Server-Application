@@ -71,40 +71,17 @@ namespace locationServer
 
         static public void match(string rawInput, Dictionary<string, string> dataStore, StreamWriter streamWrite)
         {
-            string whoisFind = @"^([!-~]*)\r\n$";
-            string whoisEdit = @"^([!-~]*) ([ -~]*)\r\n$";
-            string http09Find = @"^GET /([!-~]*)\r\n$";
-            string http09Edit = @"^PUT /([!-~]*)\r\n\r\n([ -~]*)\r\n$";
-            string http10Find = @"^GET /\?([!-~]*) HTTP/1.0[\ -~]*\r\n$";
-            string http10Edit = @"^POST /([!-~]*) HTTP/1.0\r\nContent-Length: [0-9]+[\r\n -~]*\r\n([A-z0-9 ]*)$";
-            string http11Find = @"GET /\?name=([!-~]*) HTTP/1.1\nHost: [A-z0-9\- ]+\n$";
-            string http11Edit = @"^POST / HTTP/1.1\nHost: [!-~]+\nContent-Length: [0-9]+[\n -~]*\nname=([!-~]*)&location=([ -~]*)$";
+            string whoisFind = @"^([!-~]*)\r\n";
+            string whoisEdit = @"^([!-~]*) ([ -~]*)\r\n";
+            string http09Find = @"^GET /([!-~]*)\r\n";
+            string http09Edit = @"^PUT /([!-~]*)\r\n\r\n([ -~]*)\r\n";
+            string http10Find = @"^GET /\?([!-~]*) HTTP/1.0[\ -~]*\r\n";
+            string http10Edit = @"^POST /([!-~]*) HTTP/1.0\r\nContent-Length: [0-9]+[\r\n -~]*\r\n([A-z0-9 ]*)";
+            string http11Find = @"GET /\?name=([!-~]*) HTTP/1.1\r\nHost: [A-z0-9\- ]+\r\n";
+            string http11Edit = @"^POST / HTTP/1.1\r\nHost: [!-~]+\r\nContent-Length: [0-9]+[\r\n -~]*\r\nname=([!-~]*)&location=([ -~]*)";
 
 
-            if (Regex.IsMatch(rawInput, whoisFind))
-            {
-                foreach(Match info in Regex.Matches(rawInput, whoisFind))
-                {
-                    string record = (findRecord(dataStore, info.Groups[1].ToString()));
-                    if (record == null)
-                    {
-                        streamWrite.Write("ERROR: no entries found\r\n");
-                    }
-                    else
-                    {
-                        streamWrite.Write(record + "\r\n");
-                    }
-                }
-            }
-            else if (Regex.IsMatch(rawInput, whoisEdit))
-            {
-                foreach (Match info in Regex.Matches(rawInput, whoisEdit))
-                {
-                    editRecord(dataStore, info.Groups[1].ToString(), info.Groups[2].ToString());
-                    streamWrite.Write("OK\r\n");
-                }
-            }
-            else if (Regex.IsMatch(rawInput, http09Find))
+            if (Regex.IsMatch(rawInput, http09Find))
             {
                 foreach (Match info in Regex.Matches(rawInput, http09Find))
                 {
@@ -171,6 +148,29 @@ namespace locationServer
                 {
                     editRecord(dataStore, info.Groups[1].ToString(), info.Groups[2].ToString());
                     streamWrite.Write("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n");
+                }
+            }
+            else if (Regex.IsMatch(rawInput, whoisFind))
+            {
+                foreach (Match info in Regex.Matches(rawInput, whoisFind))
+                {
+                    string record = (findRecord(dataStore, info.Groups[1].ToString()));
+                    if (record == null)
+                    {
+                        streamWrite.Write("ERROR: no entries found\r\n");
+                    }
+                    else
+                    {
+                        streamWrite.Write(record + "\r\n");
+                    }
+                }
+            }
+            else if (Regex.IsMatch(rawInput, whoisEdit))
+            {
+                foreach (Match info in Regex.Matches(rawInput, whoisEdit))
+                {
+                    editRecord(dataStore, info.Groups[1].ToString(), info.Groups[2].ToString());
+                    streamWrite.Write("OK\r\n");
                 }
             }
             else

@@ -20,19 +20,69 @@ namespace location
             //client.Connect("whois.networksolutions.com", 43);
             //client.Connect("whois.net.dcs.hull.ac.uk", 43); doesnt seem to be connecting with this
             //h and /p stuff not tested yet
-            if (args[0] == "/h")
-            {
-                hostName = args[1];
-                args[0] = args[2];
-                args[1] = args[3];
-            }
+            string type = "";
+            string[] data = new string[3];
             for (int i = 0; i < args.Length; i++)
             {
-                if (args[i] == "/p")
+                if (args[i] == "/h")
                 {
-                    portNum = int.Parse(args[i + 1]);
+                    args[i] = null;
+                    i++;
+                    hostName = args[i];
+                    args[i] = null;
+                }
+                else if (args[i] == "/p")
+                {
+                    args[i] = null;
+                    i++;
+                    bool valid = int.TryParse(args[i], out portNum);
+                    args[i] = null;
+                    if (valid == false)
+                    {
+                        Console.WriteLine("Invalid Port Number");
+                    }
+                }
+                else if (args[i] == "/h9")
+                {
+                    int k = 0;
+                    for (int j = 0; j < args.Length; j++)
+                    {
+                        if (args[j] != null)
+                        {
+                            data[k] = args[j];
+                            k++;
+                        }
+                    }
+                    type = "h9";
+                }
+                else if (args[i] == "/h0")
+                {
+                    int k = 0;
+                    for (int j = 0; j < args.Length; j++)
+                    {
+                        if (args[j] != null)
+                        {
+                            data[k] = args[j];
+                            k++;
+                        }
+                    }
+                    type = "h0";
+                }
+                else if (args[i] == "/h1")
+                {
+                    int k = 0;
+                    for (int j = 0; j < args.Length; j++)
+                    {
+                        if (args[j] != null)
+                        {
+                            data[k] = args[j];
+                            k++;
+                        }
+                    }
+                    type = "h1";
                 }
             }
+
             client.Connect(hostName, portNum);
             StreamWriter streamWrite = new StreamWriter(client.GetStream());
             StreamReader streamRead = new StreamReader(client.GetStream());
@@ -40,27 +90,36 @@ namespace location
 
             try
             {
-                if (args[args.Length - 1] == "/h9")
+                if (type == "h9")
                 {
-                    h09Pro(args, streamWrite);
+                    h09Pro(data, streamWrite);
                 }
-                else if (args[args.Length - 1] == "/h0")
+                else if (type == "h0")
                 {
-                    h10Pro(args, streamWrite);
+                    h10Pro(data, streamWrite);
                 }
-                else if (args[args.Length - 1] == "/h1")
+                else if (type == "h1")
                 {
-                    h11Pro(args, streamWrite);
+                    h11Pro(data, streamWrite);
                 }
                 else
                 {
-                    whoisPro(args, streamWrite);
+                    int k = 0;
+                    for (int j = 0; j < args.Length; j++)
+                    {
+                        if (args[j] != null)
+                        {
+                            data[k] = args[j];
+                            k++;
+                        }
+                    }
+                    whoisPro(data, streamWrite);
                 }
 
                 streamWrite.Flush();
                 string x = streamRead.ReadToEnd().ToString();
                 Console.WriteLine(x);
-                match(x, args);
+                match(x, data);
                 streamWrite.Close();
                 streamRead.Close();
                 client.Close();
@@ -69,11 +128,12 @@ namespace location
             {
                 Console.WriteLine(e);
             }
+                       
         }
 
         static public void whoisPro(string[] args, StreamWriter streamWrite)
         {
-            if (args.Length == 2)
+            if (args[1] != null)
             {
                 streamWrite.Write(args[0] + " " + args[1] + "\r\n");
             }
@@ -85,7 +145,7 @@ namespace location
 
         static public void h09Pro(string[] args, StreamWriter streamWrite)
         {
-            if (args.Length == 3)
+            if (args[2] != null)
             {
                 streamWrite.Write("PUT /" + args[0] + "\r\n\r\n" + args[1] +"\r\n");
             }
@@ -97,7 +157,7 @@ namespace location
 
         static public void h10Pro(string[] args, StreamWriter streamWrite)
         {
-            if (args.Length == 3)
+            if (args[2] != null)
             {
                 streamWrite.Write("POST /" + args[0] + " HTTP/1.0\r\nContent-Length: " + args[1].Length + "\r\n" + args[1]);
             }
@@ -109,13 +169,13 @@ namespace location
 
         static public void h11Pro(string[] args, StreamWriter streamWrite)
         {
-            if (args.Length == 3)
+            if (args[2] != null)
             {
-                streamWrite.Write("POST / HTTP/1.1\nHost: " + Dns.GetHostName() + "\nContent-Length: " + (args[0].Length+args[1].Length) + "\nname=" + args[0] + "&location=" + args[1]);
+                streamWrite.Write("POST / HTTP/1.1\r\nHost: " + Dns.GetHostName() + "\r\nContent-Length: " + (args[0].Length+args[1].Length) + "\r\nname=" + args[0] + "&location=" + args[1]);
             }
             else
             {
-                streamWrite.Write("GET /?name=" + args[0] + " HTTP/1.1\nHost: " + Dns.GetHostName() + "\n");
+                streamWrite.Write("GET /?name=" + args[0] + " HTTP/1.1\r\nHost: " + Dns.GetHostName() + "\r\n");
             }
         }
 
