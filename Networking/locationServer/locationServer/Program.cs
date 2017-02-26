@@ -7,51 +7,55 @@ using System.Net.Sockets;
 using System.Net;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace locationServer
 {
+    static class data
+    {
+        static public Dictionary<string, string> dataStore = new Dictionary<string, string>();
+        //static public ThreadStart myThreadStart;
+      
+    }
+
     class Program
     {
+
         static void Main(string[] args)
         {
-            Dictionary<string, string> dataStore = new Dictionary<string, string>();
-            dataStore.Add("tim", "here");
-            runServer(dataStore);
+
+            data.dataStore.Add("tim", "here");
+            runServer();
+
+            //runServer(dataStore);
         }
 
-        static public void runServer(Dictionary<string, string> dataStore)
+        static public void runServer()
         {
+            handler requestHandler;
             TcpListener listener;
-            //Socket connection;
-            NetworkStream socketStream;
             TcpClient client;
             IPAddress localIP = Dns.Resolve("localhost").AddressList[0];
-
-            try
+            listener = new TcpListener(localIP, 43);
+            listener.Start();
+            while (true)
             {
-                listener = new TcpListener(localIP, 43);
-                listener.Start();
-                while (true)
-                {
-                    Console.WriteLine("Listening");
-                    //connection = listener.AcceptSocket();
-                    //Console.WriteLine(connection.Connected.ToString());
-                    client = listener.AcceptTcpClient();
-                    socketStream = client.GetStream();
-                    doRequest(client, dataStore);
-                    socketStream.Close();
-                    //connection.Close();
-                    //Console.WriteLine(connection.Connected.ToString());
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
+                Console.WriteLine("Listening");
+                client = listener.AcceptTcpClient();
+                requestHandler = new handler();
+                Thread myThread = new Thread(() => requestHandler.doRequest(client, data.dataStore));
+                myThread.Start();
             }
         }
+    }
 
-        static public Dictionary<string, string> doRequest(TcpClient client, Dictionary<string, string> dataStore)
+    class handler
+    { 
+        public Dictionary<string, string> doRequest(TcpClient client, Dictionary<string, string> dataStore)
         {
+            Thread.Sleep(2000);
+            NetworkStream socketStream;
+            socketStream = client.GetStream();
             StreamReader streamRead = new StreamReader(client.GetStream());
             StreamWriter streamWrite = new StreamWriter(client.GetStream());
             string recieved = "";
@@ -65,18 +69,25 @@ namespace locationServer
             match(recieved, dataStore, streamWrite);
             streamWrite.Flush();
             streamWrite.Close();
+            socketStream.Close();
             return dataStore;
         }
 
-
-        static public void match(string rawInput, Dictionary<string, string> dataStore, StreamWriter streamWrite)
+        //Uses regular expressions to match the recieved string to its protocol
+        public void match(string rawInput, Dictionary<string, string> dataStore, StreamWriter streamWrite)
         {
+            //Any number of ASCII characters (expt space) followed by LFCR
             string whoisFind = @"^([!-~]*)\r\n";
+            //Any number of ASCII characters (expt space) then a space then any number of ASCII characters followed by LFCR
             string whoisEdit = @"^([!-~]*) ([ -~]*)\r\n";
+            //The sequence 'GET /', then any number of ASCII characters (expt space) followed by LFCR
             string http09Find = @"^GET /([!-~]*)\r\n";
+            //The sequence 'PUT /', then any number of ASCII characters(expt space) followed by 2 LFCRs. Then any number of ASCII characters followed by LFCR
             string http09Edit = @"^PUT /([!-~]*)\r\n\r\n([ -~]*)\r\n";
+            //The sequence 'GET /?', then any number of ASCII characters (expt space) followed by space HTTP/1.0 then LFCR
             string http10Find = @"^GET /\?([!-~]*) HTTP/1.0[\ -~]*\r\n";
-            string http10Edit = @"^POST /([!-~]*) HTTP/1.0\r\nContent-Length: [0-9]+[\r\n -~]*\r\n([A-z0-9 ]*)";
+            //The sequence 'POST /', any number of ASCII scharacter (expt space) then ' HTTP/1.0' LFCR 'Content-Length: ' a number then any number of characters LFCR and any number of characters
+            string http10Edit = @"^POST /([!-~]*) HTTP/1.0\r\nContent-Length: [0-9]+[\r\n -~]*\r\n([ -~]*)";
             string http11Find = @"GET /\?name=([!-~]*) HTTP/1.1\r\nHost: [A-z0-9\- ]+\r\n";
             string http11Edit = @"^POST / HTTP/1.1\r\nHost: [!-~]+\r\nContent-Length: [0-9]+[\r\n -~]*\r\nname=([!-~]*)&location=([ -~]*)";
 
@@ -179,7 +190,7 @@ namespace locationServer
             }
         }
 
-        static public Dictionary<string,string> editRecord(Dictionary<string,string> dataStore, string name, string location)
+        public Dictionary<string,string> editRecord(Dictionary<string,string> dataStore, string name, string location)
         {
             if (dataStore.ContainsKey(name))
             {
@@ -192,7 +203,7 @@ namespace locationServer
             return dataStore;
         }
 
-        static public string findRecord(Dictionary<string, string> dataStore, string name)
+        public string findRecord(Dictionary<string, string> dataStore, string name)
         {
             if (dataStore.ContainsKey(name))
             {

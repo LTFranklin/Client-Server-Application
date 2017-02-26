@@ -9,11 +9,13 @@ using System.Net;
 using System.Text.RegularExpressions;
 
 namespace location
+    //Http1.0,1.1 isnt working with whois.hull. Maybe re-enabling the socket COnnection on the server will fix?????????????
 {
     class Program
     {
         static void Main(string[] args)
         {            
+            
             TcpClient client = new TcpClient();
             string hostName = "localhost";
             int portNum = 43;
@@ -180,8 +182,7 @@ namespace location
         }
 
         static  public void match(string rawInput, string [] args)
-        {
-            //string whoisFind;
+        {            
             string whoisFindPass = @"^([ -~]*)\r\n$";
             string whoisFindFail = @"^ERROR: no entries found\r\n$";
             string whoisEdit = @"^\bOK\r\n$";
