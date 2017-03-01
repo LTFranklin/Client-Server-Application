@@ -17,13 +17,13 @@ namespace location
         {            
             
             TcpClient client = new TcpClient();
-            string hostName = "localhost";
+            string hostName = "whois.net.dcs.hull.ac.uk";
             int portNum = 43;
             //client.Connect("whois.networksolutions.com", 43);
             //client.Connect("whois.net.dcs.hull.ac.uk", 43); doesnt seem to be connecting with this
             //h and /p stuff not tested yet
             string type = "";
-            string[] data = new string[3];
+            string[] data = new string[5];
             for (int i = 0; i < args.Length; i++)
             {
                 if (args[i] == "/h")
@@ -46,42 +46,27 @@ namespace location
                 }
                 else if (args[i] == "/h9")
                 {
-                    int k = 0;
-                    for (int j = 0; j < args.Length; j++)
-                    {
-                        if (args[j] != null)
-                        {
-                            data[k] = args[j];
-                            k++;
-                        }
-                    }
+                    args[i] = null;
                     type = "h9";
                 }
                 else if (args[i] == "/h0")
                 {
-                    int k = 0;
-                    for (int j = 0; j < args.Length; j++)
-                    {
-                        if (args[j] != null)
-                        {
-                            data[k] = args[j];
-                            k++;
-                        }
-                    }
+                    args[i] = null;
                     type = "h0";
                 }
                 else if (args[i] == "/h1")
                 {
-                    int k = 0;
-                    for (int j = 0; j < args.Length; j++)
-                    {
-                        if (args[j] != null)
-                        {
-                            data[k] = args[j];
-                            k++;
-                        }
-                    }
+                    args[i] = null;
                     type = "h1";
+                }
+            }
+            int k = 0;
+            for(int i = 0; i < args.Length; i++)
+            {
+                if(args[i] != null)
+                {
+                    data[k] = args[i];
+                    k++;
                 }
             }
 
@@ -106,7 +91,6 @@ namespace location
                 }
                 else
                 {
-                    int k = 0;
                     for (int j = 0; j < args.Length; j++)
                     {
                         if (args[j] != null)
@@ -119,9 +103,17 @@ namespace location
                 }
 
                 streamWrite.Flush();
-                string x = streamRead.ReadToEnd().ToString();
-                Console.WriteLine(x);
-                match(x, data);
+                client.ReceiveTimeout = 5000;
+                try
+                {
+                    string x = streamRead.ReadToEnd().ToString();
+                    //Console.WriteLine(x);
+                    match(x, data);
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine("Timed out");
+                }
                 streamWrite.Close();
                 streamRead.Close();
                 client.Close();
@@ -147,7 +139,7 @@ namespace location
 
         static public void h09Pro(string[] args, StreamWriter streamWrite)
         {
-            if (args[2] != null)
+            if (args[1] != null)
             {
                 streamWrite.Write("PUT /" + args[0] + "\r\n\r\n" + args[1] +"\r\n");
             }
@@ -159,7 +151,7 @@ namespace location
 
         static public void h10Pro(string[] args, StreamWriter streamWrite)
         {
-            if (args[2] != null)
+            if (args[1] != null)
             {
                 streamWrite.Write("POST /" + args[0] + " HTTP/1.0\r\nContent-Length: " + args[1].Length + "\r\n" + args[1]);
             }
@@ -171,7 +163,7 @@ namespace location
 
         static public void h11Pro(string[] args, StreamWriter streamWrite)
         {
-            if (args[2] != null)
+            if (args[1] != null)
             {
                 streamWrite.Write("POST / HTTP/1.1\r\nHost: " + Dns.GetHostName() + "\r\nContent-Length: " + (args[0].Length+args[1].Length) + "\r\nname=" + args[0] + "&location=" + args[1]);
             }
