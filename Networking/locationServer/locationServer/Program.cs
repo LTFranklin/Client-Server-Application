@@ -13,9 +13,7 @@ namespace locationServer
 {
     static class data
     {
-        static public Dictionary<string, string> dataStore = new Dictionary<string, string>();
-        //static public ThreadStart myThreadStart;
-      
+        static public Dictionary<string, string> dataStore = new Dictionary<string, string>();      
     }
 
     class Program
@@ -26,8 +24,6 @@ namespace locationServer
 
             data.dataStore.Add("tim", "here");
             runServer();
-
-            //runServer(dataStore);
         }
 
         static public void runServer()
@@ -53,11 +49,11 @@ namespace locationServer
     { 
         public void doRequest(TcpClient client, Dictionary<string, string> dataStore)
         {
-            //Thread.Sleep(2000);
             NetworkStream socketStream;
             socketStream = client.GetStream();
             StreamReader streamRead = new StreamReader(client.GetStream());
             StreamWriter streamWrite = new StreamWriter(client.GetStream());
+            //may be breaking stuff
             client.ReceiveTimeout = 2500;
             client.SendTimeout = 2500;
             string recieved = "";
@@ -90,17 +86,12 @@ namespace locationServer
         //Uses regular expressions to match the recieved string to its protocol
         public void match(string rawInput, Dictionary<string, string> dataStore, StreamWriter streamWrite)
         {
-            //Any number of ASCII characters (expt space) followed by LFCR
+            //matches whatever is in the speech marks to the string provided. Brackets group things together to be read out. * means 0+ allowing empty strings
             string whoisFind = @"^([!-~]*)\r\n";
-            //Any number of ASCII characters (expt space) then a space then any number of ASCII characters followed by LFCR
             string whoisEdit = @"^([!-~]*) ([ -~]*)\r\n";
-            //The sequence 'GET /', then any number of ASCII characters (expt space) followed by LFCR
             string http09Find = @"^GET /([!-~]*)\r\n";
-            //The sequence 'PUT /', then any number of ASCII characters(expt space) followed by 2 LFCRs. Then any number of ASCII characters followed by LFCR
             string http09Edit = @"^PUT /([!-~]*)\r\n\r\n([ -~]*)\r\n";
-            //The sequence 'GET /?', then any number of ASCII characters (expt space) followed by space HTTP/1.0 then LFCR
             string http10Find = @"^GET /\?([!-~]*) HTTP/1.0[\ -~]*\r\n";
-            //The sequence 'POST /', any number of ASCII scharacter (expt space) then ' HTTP/1.0' LFCR 'Content-Length: ' a number then any number of characters LFCR and any number of characters
             string http10Edit = @"^POST /([!-~]*) HTTP/1.0\r\nContent-Length: [0-9]+[\r\n -~]*\r\n([ -~]*)";
             string http11Find = @"GET /\?name=([!-~]*) HTTP/1.1\r\nHost: [A-z0-9\- ]+\r\n";
             string http11Edit = @"^POST / HTTP/1.1\r\nHost: [!-~]+\r\nContent-Length: [0-9]+[\r\n -~]*\r\nname=([!-~]*)&location=([ -~]*)";

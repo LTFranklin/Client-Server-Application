@@ -9,7 +9,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 
 namespace location
-    //Http1.0,1.1 isnt working with whois.hull. Maybe re-enabling the socket COnnection on the server will fix?????????????
+
 {
     class Program
     {
@@ -19,9 +19,6 @@ namespace location
             TcpClient client = new TcpClient();
             string hostName = "localhost";
             int portNum = 43;
-            //client.Connect("whois.networksolutions.com", 43);
-            //client.Connect("whois.net.dcs.hull.ac.uk", 43); doesnt seem to be connecting with this
-            //h and /p stuff not tested yet
             string type = "";
             string[] data = new string[5];
             for (int i = 0; i < args.Length; i++)
