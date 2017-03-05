@@ -51,26 +51,40 @@ namespace locationServer
 
     class handler
     { 
-        public Dictionary<string, string> doRequest(TcpClient client, Dictionary<string, string> dataStore)
+        public void doRequest(TcpClient client, Dictionary<string, string> dataStore)
         {
-            Thread.Sleep(2000);
+            //Thread.Sleep(2000);
             NetworkStream socketStream;
             socketStream = client.GetStream();
             StreamReader streamRead = new StreamReader(client.GetStream());
             StreamWriter streamWrite = new StreamWriter(client.GetStream());
+            client.ReceiveTimeout = 2500;
+            client.SendTimeout = 2500;
             string recieved = "";
-            char[] rawIn = new char[250]; ;
-            streamRead.Read(rawIn, 0, 250);
-            for(int i = 0; i < 250; i++)
+            int buffLength = 5000;
+
+            char[] rawIn = new char[buffLength]; ;
+            try
             {
-                recieved = recieved + rawIn[i];
+                int readLength = streamRead.Read(rawIn, 0, buffLength);
+                for (int i = 0; i < readLength; i++)
+                {
+                    recieved = recieved + rawIn[i];
+                }
+
+                Console.WriteLine(recieved);
+                match(recieved, dataStore, streamWrite);
+                Console.WriteLine(streamWrite);
+                streamWrite.Flush();
+                streamWrite.Close();
+                socketStream.Close();
+                
             }
-            Console.WriteLine(recieved);
-            match(recieved, dataStore, streamWrite);
-            streamWrite.Flush();
-            streamWrite.Close();
-            socketStream.Close();
-            return dataStore;
+            catch
+            {
+                Console.WriteLine("timed out");
+                
+            }
         }
 
         //Uses regular expressions to match the recieved string to its protocol

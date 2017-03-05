@@ -17,7 +17,7 @@ namespace location
         {            
             
             TcpClient client = new TcpClient();
-            string hostName = "whois.net.dcs.hull.ac.uk";
+            string hostName = "localhost";
             int portNum = 43;
             //client.Connect("whois.networksolutions.com", 43);
             //client.Connect("whois.net.dcs.hull.ac.uk", 43); doesnt seem to be connecting with this
@@ -87,30 +87,29 @@ namespace location
                 }
                 else if (type == "h1")
                 {
-                    h11Pro(data, streamWrite);
+                    h11Pro(data, streamWrite, hostName);
                 }
                 else
                 {
-                    for (int j = 0; j < args.Length; j++)
-                    {
-                        if (args[j] != null)
-                        {
-                            data[k] = args[j];
-                            k++;
-                        }
-                    }
                     whoisPro(data, streamWrite);
                 }
 
                 streamWrite.Flush();
-                client.ReceiveTimeout = 5000;
+                client.ReceiveTimeout = 2000;
                 try
                 {
                     string x = streamRead.ReadToEnd().ToString();
                     //Console.WriteLine(x);
-                    match(x, data);
+                    if (portNum != 80)
+                    {
+                        match(x, data);
+                    }
+                    else
+                    {
+                        Console.WriteLine(data[0] + "is" + x);
+                    }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Console.WriteLine("Timed out");
                 }
@@ -161,15 +160,15 @@ namespace location
             }
         }
 
-        static public void h11Pro(string[] args, StreamWriter streamWrite)
+        static public void h11Pro(string[] args, StreamWriter streamWrite, string hostName)
         {
             if (args[1] != null)
             {
-                streamWrite.Write("POST / HTTP/1.1\r\nHost: " + Dns.GetHostName() + "\r\nContent-Length: " + (args[0].Length+args[1].Length) + "\r\nname=" + args[0] + "&location=" + args[1]);
+                streamWrite.Write("POST / HTTP/1.1\r\nHost: " + hostName + "\r\nContent-Length: " + (args[0].Length+args[1].Length+15) + "\r\nname=" + args[0] + "&location=" + args[1]);
             }
             else
             {
-                streamWrite.Write("GET /?name=" + args[0] + " HTTP/1.1\r\nHost: " + Dns.GetHostName() + "\r\n");
+                streamWrite.Write("GET /?name=" + args[0] + " HTTP/1.1\r\nHost: " + hostName + "\r\n");
             }
         }
 
@@ -188,12 +187,13 @@ namespace location
             string http11FindFail = @"^\bHTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\n\r\n$";
             string http11Edit = @"^\bHTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n$";
 
+    
 
             if (Regex.IsMatch(rawInput, whoisFindFail) || Regex.IsMatch(rawInput, http09FindFail) || Regex.IsMatch(rawInput, http10FindFail) || Regex.IsMatch(rawInput, http11FindFail))
             {
                 Console.WriteLine("ERROR: no entries found");
             }
-            else if (Regex.IsMatch(rawInput, whoisEdit) || Regex.IsMatch(rawInput, http09Edit) || Regex.IsMatch(rawInput, http10Edit) || Regex.IsMatch(rawInput, http11Edit))
+            else if ((Regex.IsMatch(rawInput, whoisEdit) && args[1] != null) || Regex.IsMatch(rawInput, http09Edit) || Regex.IsMatch(rawInput, http10Edit) || Regex.IsMatch(rawInput, http11Edit))
             {
                 Console.WriteLine(args[0] + " location changed to be " + args[1]);
             }

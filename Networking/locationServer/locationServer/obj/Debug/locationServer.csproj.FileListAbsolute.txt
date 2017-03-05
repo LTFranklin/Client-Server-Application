@@ -4,3 +4,9 @@ X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\locationServ
 X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\locationServer\locationServer\obj\Debug\locationServer.csprojResolveAssemblyReference.cache
 X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\locationServer\locationServer\obj\Debug\locationServer.exe
 X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\locationServer\locationServer\obj\Debug\locationServer.pdb
+\\data.adir.hull.ac.uk\home5\506\506696\Downloads\ideal-robot-master\Networking\locationServer\locationServer\bin\Debug\locationServer.exe.config
+\\data.adir.hull.ac.uk\home5\506\506696\Downloads\ideal-robot-master\Networking\locationServer\locationServer\obj\Debug\locationServer.exe
+\\data.adir.hull.ac.uk\home5\506\506696\Downloads\ideal-robot-master\Networking\locationServer\locationServer\obj\Debug\locationServer.pdb
+\\data.adir.hull.ac.uk\home5\506\506696\Downloads\ideal-robot-master\Networking\locationServer\locationServer\bin\Debug\locationServer.exe
+\\data.adir.hull.ac.uk\home5\506\506696\Downloads\ideal-robot-master\Networking\locationServer\locationServer\bin\Debug\locationServer.pdb
+\\data.adir.hull.ac.uk\home5\506\506696\Downloads\ideal-robot-master\Networking\locationServer\locationServer\obj\Debug\locationServer.csprojResolveAssemblyReference.cache

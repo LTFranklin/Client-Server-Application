@@ -4,3 +4,9 @@ X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\location\loc
 X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\location\location\obj\Debug\location.exe
 X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\location\location\obj\Debug\location.pdb
 X:\Users\Nargacuga\Documents\Visual Studio 2017\Projects\Networking\location\location\obj\Debug\location.csprojResolveAssemblyReference.cache
+\\data.adir.hull.ac.uk\home5\506\506696\Downloads\ideal-robot-master\Networking\location\location\bin\Debug\location.exe.config
+\\data.adir.hull.ac.uk\home5\506\506696\Downloads\ideal-robot-master\Networking\location\location\obj\Debug\location.exe
+\\data.adir.hull.ac.uk\home5\506\506696\Downloads\ideal-robot-master\Networking\location\location\obj\Debug\location.pdb
+\\data.adir.hull.ac.uk\home5\506\506696\Downloads\ideal-robot-master\Networking\location\location\bin\Debug\location.exe
+\\data.adir.hull.ac.uk\home5\506\506696\Downloads\ideal-robot-master\Networking\location\location\bin\Debug\location.pdb
+\\data.adir.hull.ac.uk\home5\506\506696\Downloads\ideal-robot-master\Networking\location\location\obj\Debug\location.csprojResolveAssemblyReference.cache
